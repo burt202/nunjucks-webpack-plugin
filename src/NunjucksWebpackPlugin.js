@@ -23,17 +23,17 @@ class NunjucksWebpackPlugin {
   }
 
   apply(compiler) {
-    let output = compiler.options.output.path
+    const {options, webpack, hooks} = compiler
+    const {Compilation, sources} = webpack
+    const {RawSource} = sources
 
-    if (output === "/" && compiler.options.devServer && compiler.options.devServer.outputPath) {
-      output = compiler.options.devServer.outputPath
+    let output = options.output.path
+
+    if (output === "/" && options.devServer && options.devServer.outputPath) {
+      output = options.devServer.outputPath
     }
 
-    const {webpack} = compiler
-    const {Compilation} = webpack
-    const {RawSource} = webpack.sources
-
-    compiler.hooks.thisCompilation.tap(pluginName, (compilation) => {
+    hooks.thisCompilation.tap(pluginName, (compilation) => {
       const configure =
         this.options.configure instanceof nunjucks.Environment
           ? this.options.configure
